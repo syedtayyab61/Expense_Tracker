@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Sample Data</title>
+</head>
+<body>
+    <h1>Add Sample Expense Data</h1>
+    <button id="addSample">Add Sample Expenses</button>
+    <div id="status"></div>
+    
+    <script>
+        document.getElementById('addSample').addEventListener('click', () => {
+            // Create sample expenses for testing
+            const sampleExpenses = [
+                {
+                    id: 'exp_' + Date.now() + '_1',
+                    amount: 500,
+                    category: 'food',
+                    description: 'Lunch at restaurant',
+                    date: new Date().toISOString().split('T')[0]
+                },
+                {
+                    id: 'exp_' + Date.now() + '_2',
+                    amount: 1200,
+                    category: 'transport',
+                    description: 'Uber ride',
+                    date: new Date(Date.now() - 86400000).toISOString().split('T')[0] // Yesterday
+                },
+                {
+                    id: 'exp_' + Date.now() + '_3',
+                    amount: 800,
+                    category: 'entertainment',
+                    description: 'Movie tickets',
+                    date: new Date(Date.now() - 172800000).toISOString().split('T')[0] // 2 days ago
+                }
+            ];
+            
+            // Get existing expenses
+            const existingExpenses = JSON.parse(localStorage.getItem('expenses')) || [];
+            
+            // Add sample expenses
+            const allExpenses = [...sampleExpenses, ...existingExpenses];
+            
+            // Save to localStorage
+            localStorage.setItem('expenses', JSON.stringify(allExpenses));
+            
+            document.getElementById('status').innerHTML = `
+                <p style="color: green;">✅ Added ${sampleExpenses.length} sample expenses!</p>
+                <p>Total expenses in storage: ${allExpenses.length}</p>
+                <p><a href="index.html">← Back to Dashboard</a></p>
+            `;
+            
+            console.log('Sample expenses added:', allExpenses);
+        });
+    </script>
+</body>
+</html>

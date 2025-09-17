@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Analytics</title>
+</head>
+<body>
+    <h1>Debug Analytics Data</h1>
+    <div id="debug-output"></div>
+
+    <script>
+        // Check localStorage data
+        const expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+        console.log('📊 Expenses from localStorage:', expenses);
+        
+        const debugOutput = document.getElementById('debug-output');
+        debugOutput.innerHTML = `
+            <h3>LocalStorage Data:</h3>
+            <p><strong>Number of expenses:</strong> ${expenses.length}</p>
+            <p><strong>Expenses data:</strong></p>
+            <pre>${JSON.stringify(expenses, null, 2)}</pre>
+            
+            <h3>Analytics Elements Check:</h3>
+        `;
+        
+        // Check if analytics elements exist (we'll add this after page loads)
+        setTimeout(() => {
+            const analyticsElements = [
+                'overviewTotalSpent',
+                'overviewDailyAvg', 
+                'overviewTransactions',
+                'overviewChart'
+            ];
+            
+            analyticsElements.forEach(id => {
+                const element = document.getElementById(id);
+                debugOutput.innerHTML += `<p>${id}: ${element ? 'Found' : 'NOT FOUND'}</p>`;
+            });
+        }, 1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Analytics Debug Panel</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        button { 
+            margin: 10px; padding: 10px 15px; 
+            background: #4285f4; color: white; 
+            border: none; border-radius: 5px; cursor: pointer;
+        }
+        button:hover { background: #3367d6; }
+        .results { 
+            background: #f5f5f5; padding: 15px; 
+            border-left: 4px solid #4285f4; margin: 20px 0;
+        }
+        .error { border-left-color: #ea4335; }
+        .success { border-left-color: #34a853; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Analytics Debug Panel</h1>
+    <p>Use these buttons to test and debug the analytics system:</p>
+    
+    <div>
+        <button onclick="runTest('testAnalyticsComponents')">🔍 Test Components</button>
+        <button onclick="runTest('forceInitAnalytics')">🚀 Force Init Analytics</button>
+        <button onclick="runTest('addTestExpense')">➕ Add Test Expense</button>
+        <button onclick="runTest('debugAnalytics')">📊 Debug Analytics</button>
+    </div>
+    
+    <div>
+        <button onclick="openMainDashboard()">🏠 Open Main Dashboard</button>
+        <button onclick="clearResults()">🗑️ Clear Results</button>
+    </div>
+    
+    <div id="results"></div>
+
+    <script>
+        function runTest(functionName) {
+            const resultsDiv = document.getElementById('results');
+            
+            try {
+                // Try to call the function on the main window (if opened from main dashboard)
+                if (window.opener && window.opener[functionName]) {
+                    const result = window.opener[functionName]();
+                    addResult(`✅ ${functionName}: ${result || 'Completed'}`, 'success');
+                } else {
+                    addResult(`❌ ${functionName}: Function not available (open from main dashboard)`, 'error');
+                }
+            } catch (error) {
+                addResult(`❌ ${functionName}: Error - ${error.message}`, 'error');
+            }
+        }
+        
+        function addResult(text, type = '') {
+            const resultsDiv = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = 'results ' + type;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}</strong>: ${text}`;
+            resultsDiv.appendChild(div);
+        }
+        
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+        
+        function openMainDashboard() {
+            window.open('../index.html', '_blank');
+        }
+        
+        // Auto-check if we can access the main window
+        setTimeout(() => {
+            if (window.opener) {
+                addResult('✅ Connected to main dashboard window', 'success');
+                addResult('You can now use the test buttons above', 'success');
+            } else {
+                addResult('⚠️ Not connected to main dashboard', 'error');
+                addResult('Please open this from the main dashboard or open it manually first', '');
+            }
+        }, 500);
+    </script>
+</body>
+</html>

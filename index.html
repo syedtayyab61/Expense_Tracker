@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Finance Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="dashboard-title">💰 Personal Finance Dashboard</h1>
+            <div class="header-controls">
+                <div class="user-info" id="userInfoContainer">
+                    <!-- User details without avatar -->
+                    <div class="user-details">
+                        <div class="user-greeting">Welcome back</div>
+                        <div id="userEmail">Loading...</div>
+                    </div>
+                </div>
+                <button id="deleteAccountBtn" class="delete-account-btn" title="Delete your account permanently">
+                    <span class="delete-text">Delete Account</span>
+                </button>
+                <button id="logoutBtn" class="logout-btn" title="Sign out of your account">
+                    <span class="logout-text">Sign Out</span>
+                </button>
+                <button id="debugAnalyticsBtn" class="debug-btn" title="Test Analytics Components" style="background: #f59e0b; color: white; padding: 8px 12px; border: none; border-radius: 4px; margin: 0 5px; cursor: pointer;">
+                    🔧 Debug
+                </button>
+                <div class="date-display">
+                    <span id="currentDate"></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Summary Cards -->
+        <section class="summary-section">
+            <div class="summary-cards">
+                <div class="card summary-card">
+                    <div class="card-icon">💳</div>
+                    <div class="card-content">
+                        <h3>Total Expenses</h3>
+                        <p class="amount" id="totalExpenses">₹0.00</p>
+                    </div>
+                </div>
+                <div class="card summary-card">
+                    <div class="card-icon">📊</div>
+                    <div class="card-content">
+                        <h3>This Month</h3>
+                        <p class="amount" id="monthlyExpenses">₹0.00</p>
+                    </div>
+                </div>
+                <div class="card summary-card">
+                    <div class="card-icon">📈</div>
+                    <div class="card-content">
+                        <h3>Predicted Next Month</h3>
+                        <p class="amount" id="predictedExpenses">₹0.00</p>
+                    </div>
+                </div>
+                <div class="card summary-card">
+                    <div class="card-icon">🏷️</div>
+                    <div class="card-content">
+                        <h3>Top Category</h3>
+                        <p class="category" id="topCategory">None</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analytics Dashboard -->
+        <section class="analytics-section">
+            <div class="analytics-header">
+                <h2>📊 Financial Analytics</h2>
+                <div class="analytics-controls">
+                    <select id="analyticsTimeframe" class="analytics-select">
+                        <option value="30">Last 30 Days</option>
+                        <option value="90">Last 3 Months</option>
+                        <option value="180">Last 6 Months</option>
+                        <option value="365">Last Year</option>
+                    </select>
+                    <button id="refreshAnalytics" class="refresh-btn">🔄 Refresh</button>
+                </div>
+            </div>
+
+            <!-- Analytics Navigation Tabs -->
+            <div class="analytics-nav">
+                <button class="analytics-tab active" data-tab="overview">📊 Overview</button>
+                <button class="analytics-tab" data-tab="trends">📈 Trends</button>
+                <button class="analytics-tab" data-tab="categories">🏷️ Categories</button>
+                <button class="analytics-tab" data-tab="budget">🎯 Budget vs Spends</button>
+                <button class="analytics-tab" data-tab="health">💚 Health</button>
+                <button class="analytics-tab" data-tab="predictions">🔮 Predictions</button>
+                <button class="analytics-tab" data-tab="patterns">🧠 Patterns</button>
+                <button class="analytics-tab" data-tab="insights">💡 Insights</button>
+            </div>
+
+            <!-- Tab Content Areas -->
+            <div class="analytics-content">
+                
+                <!-- Overview Tab -->
+                <div class="analytics-tab-content" id="overview-tab">
+                    <div class="overview-grid">
+                        <div class="overview-summary">
+                            <h3>📊 Financial Overview</h3>
+                            <div class="summary-metrics">
+                                <div class="metric-card">
+                                    <div class="metric-icon">💰</div>
+                                    <div class="metric-info">
+                                        <span class="metric-label">Total Spending</span>
+                                        <span class="metric-value" id="overviewTotalSpent">₹0</span>
+                                    </div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-icon">📅</div>
+                                    <div class="metric-info">
+                                        <span class="metric-label">Daily Average</span>
+                                        <span class="metric-value" id="overviewDailyAvg">₹0</span>
+                                    </div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-icon">🏷️</div>
+                                    <div class="metric-info">
+                                        <span class="metric-label">Top Category</span>
+                                        <span class="metric-value" id="overviewTopCategory">None</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="overview-chart">
+                            <canvas id="overviewChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trends Tab -->
+                <div class="analytics-tab-content" id="trends-tab" hidden>
+                    <div class="trends-content">
+                        <!-- Add Expense Form -->
+                        <section class="add-expense-section">
+                            <div class="card">
+                                <h2>Add New Expense</h2>
+                                <form id="expenseForm" class="expense-form">
+                                    <div class="form-group">
+                                        <label for="amount">Amount (₹)</label>
+                                        <input type="number" id="amount" name="amount" step="0.01" min="0" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="category">Category</label>
+                                        <select id="category" name="category" required>
+                                            <option value="">Select Category</option>
+                                            <option value="food">🍕 Food & Dining</option>
+                                            <option value="transport">🚗 Transportation</option>
+                                            <option value="entertainment">🎬 Entertainment</option>
+                                            <option value="shopping">🛒 Shopping</option>
+                                            <option value="bills">📄 Bills & Utilities</option>
+                                            <option value="healthcare">🏥 Healthcare</option>
+                                            <option value="education">📚 Education</option>
+                                            <option value="other">🔧 Other</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="description">Description</label>
+                                        <input type="text" id="description" name="description" placeholder="What was this expense for?" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="date">Date</label>
+                                        <input type="date" id="date" name="date" required>
+                                    </div>
+                                    
+                                    <button type="submit" class="submit-btn">Add Expense</button>
+                                </form>
+                                <div class="sample-data-section">
+                                    <button id="loadSampleData" class="sample-data-btn">📊 Load Sample Data</button>
+                                    <span class="sample-info">Click to populate with realistic expense data</span>
+                                </div>
+                            </div>
+                        </section>
+
+                        <div class="analytics-card trend-card">
+                            <div class="trend-header">
+                                <h3>📈 Spending Trends</h3>
+                                <select id="trendsTimeframe" class="timeframe-select">
+                                    <option value="1week">1 Week</option>
+                                    <option value="1month">Last Month</option>
+                                    <option value="6months" selected>Last 6 Months</option>
+                                    <option value="1year">Last 1 Year</option>
+                                </select>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="trendsTabChart"></canvas>
+                            </div>
+                            <div class="trend-insights">
+                                <div class="insight-grid">
+                                    <div class="insight-item">
+                                        <span class="insight-label">Average Daily:</span>
+                                        <span class="insight-value" id="avgDaily">₹0</span>
+                                    </div>
+                                    <div class="insight-item">
+                                        <span class="insight-label">Peak Day:</span>
+                                        <span class="insight-value" id="peakDay">None</span>
+                                    </div>
+                                    <div class="insight-item">
+                                        <span class="insight-label">Trend:</span>
+                                        <span class="insight-value" id="trendDirection">Stable</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Charts Section -->
+                        <section class="charts-section">
+                            <div class="chart-container category-chart-container">
+                                <div class="card chart-card">
+                                    <h3>Expenses by Category</h3>
+                                    <canvas id="categoryChart"></canvas>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Transaction List -->
+                        <section class="transactions-section">
+                            <div class="card">
+                                <div class="transactions-header">
+                                    <h2>Recent Transactions</h2>
+                                    <div class="filter-controls">
+                                        <select id="filterCategory">
+                                            <option value="">All Categories</option>
+                                            <option value="food">🍕 Food & Dining</option>
+                                            <option value="transport">🚗 Transportation</option>
+                                            <option value="entertainment">🎬 Entertainment</option>
+                                            <option value="shopping">🛒 Shopping</option>
+                                            <option value="bills">📄 Bills & Utilities</option>
+                                            <option value="healthcare">🏥 Healthcare</option>
+                                            <option value="education">📚 Education</option>
+                                            <option value="other">🔧 Other</option>
+                                        </select>
+                                        <button id="clearData" class="clear-btn">Clear All Data</button>
+                                    </div>
+                                </div>
+                                <div id="transactionsList" class="transactions-list">
+                                    <!-- Transactions will be dynamically added here -->
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+                <!-- Categories Tab -->
+                <div class="analytics-tab-content" id="categories-tab" hidden>
+                    <div class="categories-content">
+                        <div class="category-analysis">
+                            <h3>🏷️ Category Breakdown</h3>
+                            <div class="chart-container">
+                                <canvas id="categoriesTabChart"></canvas>
+                            </div>
+                            <div class="category-details">
+                                <h4>Top Categories</h4>
+                                <div class="top-categories" id="topCategories">
+                                    <!-- Dynamic top 3 categories -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Budget Tab -->
+                <div class="analytics-tab-content" id="budget-tab" hidden>
+                    <div class="budget-content">
+                        <div class="budget-header">
+                            <h3>🎯 Budget vs Spends</h3>
+                            <button id="setBudgetBtn" class="set-budget-btn">Set Budget</button>
+                        </div>
+                        
+                        <!-- Budget Creation Form (Hidden by default) -->
+                        <div id="budgetForm" class="budget-form hidden">
+                            <h4>Set Category Budgets</h4>
+                            <div class="budget-inputs">
+                                <div class="budget-input-group">
+                                    <label>🍕 Food & Dining</label>
+                                    <input type="number" id="budgetFood" placeholder="₹5000" min="0">
+                                </div>
+                                <div class="budget-input-group">
+                                    <label>🚗 Transportation</label>
+                                    <input type="number" id="budgetTransport" placeholder="₹3000" min="0">
+                                </div>
+                                <div class="budget-input-group">
+                                    <label>🎬 Entertainment</label>
+                                    <input type="number" id="budgetEntertainment" placeholder="₹2000" min="0">
+                                </div>
+                                <div class="budget-input-group">
+                                    <label>🛒 Shopping</label>
+                                    <input type="number" id="budgetShopping" placeholder="₹4000" min="0">
+                                </div>
+                                <div class="budget-input-group">
+                                    <label>📄 Bills & Utilities</label>
+                                    <input type="number" id="budgetBills" placeholder="₹6000" min="0">
+                                </div>
+                                <div class="budget-input-group">
+                                    <label>🏥 Healthcare</label>
+                                    <input type="number" id="budgetHealthcare" placeholder="₹2000" min="0">
+                                </div>
+                                <div class="budget-input-group">
+                                    <label>📚 Education</label>
+                                    <input type="number" id="budgetEducation" placeholder="₹3000" min="0">
+                                </div>
+                                <div class="budget-input-group">
+                                    <label>🔧 Other</label>
+                                    <input type="number" id="budgetOther" placeholder="₹1000" min="0">
+                                </div>
+                            </div>
+                            <div class="budget-form-actions">
+                                <button id="saveBudgetBtn" class="save-budget-btn">Save Budget</button>
+                                <button id="cancelBudgetBtn" class="cancel-budget-btn">Cancel</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Budget vs Spends Chart -->
+                        <div class="budget-chart-container">
+                            <canvas id="budgetVsSpendsChart"></canvas>
+                        </div>
+                        
+                        <!-- Budget Summary -->
+                        <div class="budget-summary" id="budgetSummary">
+                            <!-- Dynamic budget summary will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Health Tab -->
+                <div class="analytics-tab-content" id="health-tab" hidden>
+                    <div class="health-content">
+                        <div class="financial-health">
+                            <h3>💚 Financial Health Score</h3>
+                            <div class="health-score-display">
+                                <div class="score-circle" id="healthScoreCircle">
+                                    <span class="score-value" id="healthScore">78</span>
+                                    <span class="score-max">/100</span>
+                                </div>
+                            </div>
+                            <div class="health-breakdown">
+                                <div class="health-item">
+                                    <span class="health-category">Spending Control</span>
+                                    <div class="health-bar">
+                                        <div class="health-progress" id="spendingControlBar" style="width: 85%"></div>
+                                    </div>
+                                    <span class="health-value" id="spendingControlValue">85%</span>
+                                </div>
+                                <div class="health-item">
+                                    <span class="health-category">Budget Adherence</span>
+                                    <div class="health-bar">
+                                        <div class="health-progress" id="budgetAdherenceBar" style="width: 72%"></div>
+                                    </div>
+                                    <span class="health-value" id="budgetAdherenceValue">72%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Predictions Tab -->
+                <div class="analytics-tab-content" id="predictions-tab" hidden>
+                    <div class="predictions-content">
+                        <h3>🔮 Predictive Insights</h3>
+                        <div class="predictions-grid">
+                            <div class="prediction-card forecast-card">
+                                <div class="prediction-icon">📊</div>
+                                <div class="prediction-content">
+                                    <span class="prediction-title">Next Month Forecast</span>
+                                    <span class="prediction-value" id="nextMonthForecast">₹8,450</span>
+                                </div>
+                            </div>
+                            <div class="prediction-card risk-card">
+                                <div class="prediction-icon">⚠️</div>
+                                <div class="prediction-content">
+                                    <span class="prediction-title">Budget Risk</span>
+                                    <span class="prediction-value risk-low" id="budgetRisk">Low Risk</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Patterns Tab -->
+                <div class="analytics-tab-content" id="patterns-tab" hidden>
+                    <div class="patterns-content">
+                        <h3>🧠 Spending Patterns</h3>
+                        <div class="pattern-insights">
+                            <div class="pattern-item">
+                                <span class="pattern-label">Peak Spending Day:</span>
+                                <span class="pattern-value" id="peakSpendingDay">Friday (₹1,850 avg)</span>
+                            </div>
+                        </div>
+                        <div class="correlation-chart">
+                            <canvas id="patternsCorrelationChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Insights Tab -->
+                <div class="analytics-tab-content" id="insights-tab" hidden>
+                    <div class="insights-content">
+                        <h3>💡 Key Insights</h3>
+                        <div class="insight-list" id="topInsights">
+                            <!-- Top 3 actionable insights -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="notifications.js"></script>
+    <script src="api-integration.js"></script>
+    <script src="bulletproof-tabs.js"></script>
+    <script src="simple-analytics.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

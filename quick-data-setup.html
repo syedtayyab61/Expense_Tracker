@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Data Setup - Expense Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f0f2f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .button {
+            background: #007bff;
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        .button:hover {
+            background: #0056b3;
+        }
+        .success {
+            background: #28a745;
+        }
+        .success:hover {
+            background: #1e7e34;
+        }
+        .status {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Quick Sample Data Setup</h1>
+        <p>This will add sample expense data for testing your analytics dashboard.</p>
+        
+        <button class="button" onclick="addSampleData()">📊 Add Sample Expense Data</button>
+        <button class="button success" onclick="openDashboard()">🚀 Open Dashboard</button>
+        
+        <div class="status" id="status">Ready to add sample data...</div>
+        
+        <h3>📋 What This Adds:</h3>
+        <ul>
+            <li><strong>20 diverse expenses</strong> across 6 categories</li>
+            <li><strong>Multiple date ranges</strong> for trend analysis</li>
+            <li><strong>Realistic amounts</strong> from $80 to $3500</li>
+            <li><strong>Categories:</strong> Food, Transportation, Shopping, Bills, Entertainment, Health</li>
+        </ul>
+    </div>
+
+    <script>
+        function updateStatus(message) {
+            document.getElementById('status').innerHTML = message;
+        }
+
+        function addSampleData() {
+            updateStatus('📊 Creating sample expense data...');
+            
+            // Helper function to get date X days ago
+            function getDateDaysAgo(days) {
+                const date = new Date();
+                date.setDate(date.getDate() - days);
+                return date.toISOString().split('T')[0];
+            }
+            
+            const sampleExpenses = [
+                // Recent expenses (last week)
+                { id: Date.now() + Math.random(), amount: 250, description: 'Restaurant lunch', category: 'Food', date: getDateDaysAgo(1) },
+                { id: Date.now() + Math.random(), amount: 1200, description: 'Weekly groceries', category: 'Food', date: getDateDaysAgo(2) },
+                { id: Date.now() + Math.random(), amount: 150, description: 'Uber ride', category: 'Transportation', date: getDateDaysAgo(2) },
+                { id: Date.now() + Math.random(), amount: 2500, description: 'Shopping spree', category: 'Shopping', date: getDateDaysAgo(3) },
+                { id: Date.now() + Math.random(), amount: 80, description: 'Coffee shop', category: 'Food', date: getDateDaysAgo(4) },
+                
+                // Week 2
+                { id: Date.now() + Math.random(), amount: 3500, description: 'Car fuel', category: 'Transportation', date: getDateDaysAgo(8) },
+                { id: Date.now() + Math.random(), amount: 2200, description: 'Electricity bill', category: 'Bills', date: getDateDaysAgo(9) },
+                { id: Date.now() + Math.random(), amount: 500, description: 'Movie tickets', category: 'Entertainment', date: getDateDaysAgo(10) },
+                { id: Date.now() + Math.random(), amount: 800, description: 'Doctor visit', category: 'Health', date: getDateDaysAgo(11) },
+                { id: Date.now() + Math.random(), amount: 1800, description: 'Internet bill', category: 'Bills', date: getDateDaysAgo(12) },
+                
+                // Week 3
+                { id: Date.now() + Math.random(), amount: 320, description: 'Family dinner', category: 'Food', date: getDateDaysAgo(15) },
+                { id: Date.now() + Math.random(), amount: 450, description: 'Books', category: 'Shopping', date: getDateDaysAgo(16) },
+                { id: Date.now() + Math.random(), amount: 180, description: 'Food delivery', category: 'Food', date: getDateDaysAgo(17) },
+                { id: Date.now() + Math.random(), amount: 300, description: 'Streaming services', category: 'Entertainment', date: getDateDaysAgo(18) },
+                { id: Date.now() + Math.random(), amount: 1500, description: 'Dental care', category: 'Health', date: getDateDaysAgo(19) },
+                
+                // Older expenses
+                { id: Date.now() + Math.random(), amount: 950, description: 'Phone bill', category: 'Bills', date: getDateDaysAgo(22) },
+                { id: Date.now() + Math.random(), amount: 400, description: 'Taxi rides', category: 'Transportation', date: getDateDaysAgo(23) },
+                { id: Date.now() + Math.random(), amount: 1200, description: 'Concert tickets', category: 'Entertainment', date: getDateDaysAgo(25) },
+                { id: Date.now() + Math.random(), amount: 350, description: 'Pharmacy', category: 'Health', date: getDateDaysAgo(26) },
+                { id: Date.now() + Math.random(), amount: 2800, description: 'Weekend shopping', category: 'Shopping', date: getDateDaysAgo(28) }
+            ];
+
+            // Store in localStorage
+            localStorage.setItem('expenses', JSON.stringify(sampleExpenses));
+            
+            // Verify data was saved
+            const savedExpenses = JSON.parse(localStorage.getItem('expenses')) || [];
+            const totalAmount = savedExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+            const categories = [...new Set(savedExpenses.map(e => e.category))];
+            
+            updateStatus(`✅ SUCCESS! Added ${savedExpenses.length} sample expenses to localStorage.
+💰 Total Amount: $${totalAmount.toLocaleString()}
+🏷️ Categories: ${categories.join(', ')}
+📅 Date Range: Last 28 days
+
+➡️ Now click "Open Dashboard" to test analytics!`);
+        }
+        
+        function openDashboard() {
+            // Check if data exists first
+            const expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+            if (expenses.length === 0) {
+                updateStatus('❌ Please add sample data first!');
+                return;
+            }
+            
+            updateStatus('🚀 Opening dashboard... Navigate to Analytics section to test all tabs!');
+            window.open('index.html', '_blank');
+        }
+        
+        // Auto-check if data already exists
+        window.onload = function() {
+            const expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+            if (expenses.length > 0) {
+                updateStatus(`📊 Found existing data: ${expenses.length} expenses. You can add more or open dashboard directly.`);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Personal Finance Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .logo .icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .login-button {
+            width: 100%;
+            padding: 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 15px;
+            transition: background-color 0.3s;
+        }
+        
+        .login-button:hover {
+            background: #5a67d8;
+        }
+        
+        .demo-button {
+            width: 100%;
+            padding: 15px;
+            background: #48bb78;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: background-color 0.3s;
+        }
+        
+        .demo-button:hover {
+            background: #38a169;
+        }
+        
+        .message {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            text-align: center;
+            display: none;
+        }
+        
+        .message.success {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+        
+        .message.error {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 1px solid #fc8181;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .demo-info {
+            background: #edf2f7;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .demo-info h4 {
+            margin-bottom: 8px;
+            color: #2d3748;
+            font-size: 14px;
+        }
+        
+        .demo-info p {
+            margin: 4px 0;
+            color: #4a5568;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <div class="logo">
+            <div class="icon">💰</div>
+            <h1>Finance Tracker</h1>
+        </div>
+        <p class="subtitle">Sign in to access your dashboard</p>
+        
+        <div class="demo-info">
+            <h4>🎯 Demo Credentials</h4>
+            <p><strong>Email:</strong> demo@example.com</p>
+            <p><strong>Password:</strong> password123</p>
+        </div>
+        
+        <div id="message" class="message"></div>
+        
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" value="demo@example.com" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" value="password123" required>
+            </div>
+            
+            <button type="submit" class="login-button">
+                Sign In
+            </button>
+        </form>
+        
+        <button class="demo-button" onclick="instantLogin()">
+            🚀 Instant Demo Login
+        </button>
+        
+        <div class="footer">
+            <p>Don't have an account? <a href="register-fixed.html">Create one</a></p>
+        </div>
+    </div>
+
+    <script>
+        console.log('🚀 Working login page loaded successfully');
+        
+        // Show message function
+        function showMessage(text, type) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = text;
+            messageEl.className = `message ${type}`;
+            messageEl.style.display = 'block';
+            
+            setTimeout(() => {
+                if (type === 'success') {
+                    messageEl.style.display = 'none';
+                }
+            }, 2000);
+        }
+        
+        // Instant demo login function
+        function instantLogin() {
+            console.log('🎯 Instant login triggered');
+            showMessage('🎉 Demo login successful! Redirecting to dashboard...', 'success');
+            
+            // Clear any existing auth data
+            localStorage.clear();
+            
+            // Set fresh authentication data
+            const userData = {
+                email: 'demo@example.com',
+                name: 'Demo User',
+                id: 'demo-user-' + new Date().getTime(),
+                loginTime: new Date().toISOString()
+            };
+            
+            localStorage.setItem('authToken', 'demo-token-' + new Date().getTime());
+            localStorage.setItem('demoUser', JSON.stringify(userData));
+            localStorage.setItem('isAuthenticated', 'true');
+            localStorage.setItem('loginSuccess', 'true');
+            
+            console.log('✅ Auth data stored:', {
+                token: localStorage.getItem('authToken'),
+                user: localStorage.getItem('demoUser'),
+                authenticated: localStorage.getItem('isAuthenticated')
+            });
+            
+            setTimeout(() => {
+                console.log('🔄 Redirecting to dashboard...');
+                window.location.replace('dashboard-working.html');
+            }, 1500);
+        }
+        
+        // Form login
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('📝 Form login submitted');
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            
+            if (!email || !password) {
+                showMessage('❌ Please enter both email and password', 'error');
+                return;
+            }
+            
+            showMessage('🔄 Signing in...', 'success');
+            
+            // Simple validation
+            if (email === 'demo@example.com' && password === 'password123') {
+                console.log('✅ Demo credentials accepted');
+                instantLogin();
+            } else if (email.includes('@') && password.length >= 6) {
+                console.log('✅ Generic credentials accepted');
+                
+                // Clear any existing auth data
+                localStorage.clear();
+                
+                const userData = {
+                    email: email,
+                    name: email.split('@')[0],
+                    id: 'user-' + new Date().getTime(),
+                    loginTime: new Date().toISOString()
+                };
+                
+                localStorage.setItem('authToken', 'token-' + new Date().getTime());
+                localStorage.setItem('demoUser', JSON.stringify(userData));
+                localStorage.setItem('isAuthenticated', 'true');
+                localStorage.setItem('loginSuccess', 'true');
+                
+                showMessage('🎉 Login successful! Redirecting...', 'success');
+                
+                setTimeout(() => {
+                    window.location.replace('dashboard-working.html');
+                }, 1500);
+            } else {
+                showMessage('❌ Invalid credentials. Use demo@example.com / password123', 'error');
+            }
+        });
+        
+        // Test responsiveness
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ DOM loaded - testing input responsiveness');
+            
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            
+            emailInput.addEventListener('focus', () => console.log('📧 Email input focused'));
+            passwordInput.addEventListener('focus', () => console.log('🔒 Password input focused'));
+            emailInput.addEventListener('click', () => console.log('👆 Email input clicked'));
+            passwordInput.addEventListener('click', () => console.log('👆 Password input clicked'));
+            
+            // Auto-focus email for testing
+            setTimeout(() => {
+                emailInput.focus();
+                console.log('🎯 Email input auto-focused for testing');
+            }, 500);
+        });
+    </script>
+</body>
+</html>
